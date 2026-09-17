@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manojkumar — Software Engineering Student</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#faf9f5;
+    --panel:#ffffff;
+    --ink:#1b241f;
+    --ink-soft:#4b564f;
+    --line:#dfe0d8;
+    --accent:#1e6f5c;
+    --accent-soft:#e4efe9;
+    --gold:#b8862e;
+    --gold-soft:#f3ead7;
+    --radius:3px;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --sans-cond: 'IBM Plex Sans Condensed', sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#141815;
+      --panel:#191f1b;
+      --ink:#e9ede9;
+      --ink-soft:#a8b3a9;
+      --line:#2b332c;
+      --accent:#5fbfa0;
+      --accent-soft:#1d2b25;
+      --gold:#d9ab5a;
+      --gold-soft:#2a2419;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#141815;
+    --panel:#191f1b;
+    --ink:#e9ede9;
+    --ink-soft:#a8b3a9;
+    --line:#2b332c;
+    --accent:#5fbfa0;
+    --accent-soft:#1d2b25;
+    --gold:#d9ab5a;
+    --gold-soft:#2a2419;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  .shell{
+    display:grid;
+    grid-template-columns:230px 1fr;
+    max-width:1160px;
+    margin:0 auto;
+    min-height:100vh;
+  }
+
+  /* ---- Sidebar / file nav ---- */
+  .sidebar{
+    border-right:1px solid var(--line);
+    padding:32px 20px;
+    position:sticky;
+    top:0;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .sidebar-top .id{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+  .sidebar-top .name{
+    font-family:var(--sans-cond);
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:0.2px;
+    margin-bottom:28px;
+  }
+  nav.filetree{
+    font-family:var(--mono);
+    font-size:13.5px;
+  }
+  nav.filetree a{
+    display:block;
+    color:var(--ink-soft);
+    padding:6px 8px;
+    border-radius:var(--radius);
+    margin-bottom:2px;
+  }
+  nav.filetree a:hover{
+    background:var(--accent-soft);
+    color:var(--ink);
+    text-decoration:none;
+  }
+  nav.filetree a.active{
+    background:var(--accent-soft);
+    color:var(--accent);
+  }
+  .sidebar-bottom{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  .theme-toggle{
+    font-family:var(--mono);
+    font-size:12px;
+    background:none;
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    padding:6px 10px;
+    border-radius:var(--radius);
+    cursor:pointer;
+    margin-top:14px;
+  }
+  .theme-toggle:hover{border-color:var(--accent); color:var(--accent);}
+
+  /* ---- Main content ---- */
+  main{padding:64px 56px 100px;}
+  section{margin-bottom:88px; scroll-margin-top:32px;}
+  .section-tag{
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--accent);
+    margin-bottom:10px;
+  }
+  h2{
+    font-family:var(--sans-cond);
+    font-weight:700;
+    font-size:26px;
+    margin:0 0 22px;
+  }
+
+  /* Hero */
+  .hero{margin-bottom:96px;}
+  .hero .role{
+    font-family:var(--mono);
+    font-size:14px;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+  }
+  .hero h1{
+    font-family:var(--sans-cond);
+    font-weight:700;
+    font-size:clamp(38px, 6vw, 60px);
+    line-height:1.08;
+    margin:0 0 22px;
+    max-width:14ch;
+  }
+  .hero p.lede{
+    max-width:56ch;
+    font-size:17.5px;
+    color:var(--ink-soft);
+    margin:0 0 28px;
+  }
+  .hero .links{display:flex; gap:14px; flex-wrap:wrap;}
+  .hero .links a{
+    font-family:var(--mono);
+    font-size:13.5px;
+    border:1px solid var(--line);
+    padding:9px 14px;
+    border-radius:var(--radius);
+    color:var(--ink);
+  }
+  .hero .links a:hover{border-color:var(--accent); color:var(--accent); text-decoration:none;}
+
+  /* About */
+  .about-grid{display:grid; grid-template-columns: 1.3fr 1fr; gap:48px;}
+  .about-grid p{max-width:58ch; color:var(--ink-soft);}
+  .edu-card{
+    border-left:2px solid var(--accent);
+    padding-left:18px;
+  }
+  .edu-card .school{font-weight:600; font-size:15.5px; margin-bottom:4px;}
+  .edu-card .degree{color:var(--ink-soft); font-size:14.5px; margin-bottom:4px;}
+  .edu-card .status{
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--gold);
+    background:var(--gold-soft);
+    display:inline-block;
+    padding:3px 8px;
+    border-radius:var(--radius);
+    margin-top:6px;
+  }
+
+  /* Skills */
+  .skill-rows{border-top:1px solid var(--line);}
+  .skill-row{
+    display:grid;
+    grid-template-columns:170px 1fr;
+    gap:24px;
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+    align-items:baseline;
+  }
+  .skill-row .label{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+  .skill-row .items{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{
+    font-family:var(--mono);
+    font-size:13px;
+    padding:5px 11px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+  }
+  .soft-list{
+    columns:2;
+    column-gap:32px;
+    margin-top:28px;
+    padding:0;
+    list-style:none;
+    max-width:620px;
+  }
+  .soft-list li{
+    font-size:14.5px;
+    color:var(--ink-soft);
+    padding:7px 0;
+    break-inside:avoid;
+  }
+  .soft-list li::before{content:"— "; color:var(--accent);}
+
+  /* Interests */
+  .interest-chips{display:flex; flex-wrap:wrap; gap:10px;}
+  .interest-chips span{
+    font-size:14px;
+    padding:8px 14px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    color:var(--ink-soft);
+  }
+
+  /* Projects / certs empty state */
+  .empty-card{
+    border:1px dashed var(--line);
+    border-radius:var(--radius);
+    padding:26px 24px;
+    max-width:60ch;
+  }
+  .empty-card .head{
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .empty-card p{
+    color:var(--ink-soft);
+    font-size:14.5px;
+    margin:0;
+  }
+
+  /* Contact */
+  .contact-block{
+    border-top:1px solid var(--line);
+    padding-top:28px;
+  }
+  .contact-row{
+    display:flex;
+    gap:14px;
+    align-items:baseline;
+    padding:10px 0;
+    font-size:15.5px;
+  }
+  .contact-row .k{
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--ink-soft);
+    width:70px;
+    flex-shrink:0;
+  }
+  .langs{
+    display:flex;
+    gap:10px;
+    margin-top:22px;
+  }
+  footer{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--ink-soft);
+    padding:24px 56px 40px;
+  }
+
+  /* Mobile nav */
+  .mobile-nav{display:none;}
+
+  @media (max-width: 880px){
+    .shell{grid-template-columns:1fr;}
+    .sidebar{
+      position:sticky;
+      top:0;
+      height:auto;
+      flex-direction:row;
+      align-items:center;
+      justify-content:space-between;
+      padding:16px 20px;
+      background:var(--paper);
+      z-index:10;
+      border-right:none;
+      border-bottom:1px solid var(--line);
+    }
+    .sidebar-top .name{margin-bottom:0; font-size:18px;}
+    .sidebar-top .id{display:none;}
+    nav.filetree{display:none;}
+    .sidebar-bottom{display:none;}
+    .theme-toggle{margin-top:0;}
+    main{padding:44px 24px 80px;}
+    .about-grid{grid-template-columns:1fr; gap:32px;}
+    .skill-row{grid-template-columns:1fr; gap:8px;}
+    .soft-list{columns:1;}
+    footer{padding:20px 24px 40px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="id">~/manojkumar</div>
+      <div class="name">Manojkumar</div>
+      <nav class="filetree" aria-label="Section navigation">
+        <a href="#about">~/about</a>
+        <a href="#skills">~/skills</a>
+        <a href="#interests">~/interests</a>
+        <a href="#work">~/projects</a>
+        <a href="#contact">~/contact</a>
+      </nav>
+    </div>
+    <div class="sidebar-bottom">
+      <div>Tamil Nadu, India</div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false">switch to dark</button>
+    </div>
+  </aside>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="role">Software Engineering Student</div>
+      <h1>Learning to build software that solves real problems.</h1>
+      <p class="lede">I'm studying computer science and putting it into practice — writing code across Python, Java and C++, and picking up the tools and habits of a working developer as I go.</p>
+      <div class="links">
+        <a href="tel:6380480845">6380480845</a>
+        <a href="mailto:25uam015@muthayammal.in">25uam015@muthayammal.in</a>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="section-tag">01 — about</div>
+      <h2>About</h2>
+      <div class="about-grid">
+        <p>I'm an aspiring software engineer looking for an entry-level role where I can apply what I'm learning, keep growing technically, and contribute to a real development team. I'm drawn to problem-solving — figuring out how something should work, then building it.</p>
+        <div class="edu-card">
+          <div class="school">Muthayammal Arts and Science College</div>
+          <div class="degree">Bachelor's Degree — Computer / Software Studies</div>
+          <span class="status">currently pursuing</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="section-tag">02 — skills</div>
+      <h2>Skills</h2>
+      <div class="skill-rows">
+        <div class="skill-row">
+          <div class="label">languages</div>
+          <div class="items">
+            <span class="chip">Python</span><span class="chip">Java</span><span class="chip">C</span><span class="chip">C++</span>
+          </div>
+        </div>
+        <div class="skill-row">
+          <div class="label">web</div>
+          <div class="items">
+            <span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span>
+          </div>
+        </div>
+        <div class="skill-row">
+          <div class="label">database</div>
+          <div class="items">
+            <span class="chip">SQL</span><span class="chip">MySQL</span>
+          </div>
+        </div>
+        <div class="skill-row">
+          <div class="label">core concepts</div>
+          <div class="items">
+            <span class="chip">OOP</span><span class="chip">Data Structures &amp; Algorithms</span><span class="chip">SDLC</span><span class="chip">Debugging</span><span class="chip">Testing</span>
+          </div>
+        </div>
+        <div class="skill-row">
+          <div class="label">tools</div>
+          <div class="items">
+            <span class="chip">Git</span><span class="chip">GitHub</span><span class="chip">VS Code</span>
+          </div>
+        </div>
+        <div class="skill-row">
+          <div class="label">platforms</div>
+          <div class="items">
+            <span class="chip">Windows</span><span class="chip">Linux</span>
+          </div>
+        </div>
+      </div>
+
+      <ul class="soft-list">
+        <li>Problem solving &amp; logical thinking</li>
+        <li>Communication &amp; teamwork</li>
+        <li>Time management</li>
+        <li>Quick learning &amp; adaptability</li>
+        <li>Critical thinking &amp; attention to detail</li>
+      </ul>
+    </section>
+
+    <section id="interests">
+      <div class="section-tag">03 — interests</div>
+      <h2>Areas of interest</h2>
+      <div class="interest-chips">
+        <span>Software Development</span>
+        <span>Web Development</span>
+        <span>Application Development</span>
+        <span>Database Management</span>
+        <span>AI &amp; Machine Learning</span>
+        <span>Data Structures &amp; Algorithms</span>
+        <span>Cloud Computing</span>
+      </div>
+    </section>
+
+    <section id="work">
+      <div class="section-tag">04 — projects &amp; certifications</div>
+      <h2>Projects &amp; certifications</h2>
+      <div class="empty-card">
+        <div class="head">Coming soon</div>
+        <p>This section is empty for now — projects and certifications will be added here as they're completed.</p>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="section-tag">05 — contact</div>
+      <h2>Get in touch</h2>
+      <div class="contact-block">
+        <div class="contact-row"><span class="k">phone</span><a href="tel:6380480845">6380480845</a></div>
+        <div class="contact-row"><span class="k">email</span><a href="mailto:25uam015@muthayammal.in">25uam015@muthayammal.in</a></div>
+        <div class="contact-row"><span class="k">based in</span><span>Tamil Nadu, India</span></div>
+        <div class="langs">
+          <span class="chip">Tamil</span>
+          <span class="chip">English</span>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>© <span id="year"></span> Manojkumar</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // scroll-spy for nav
+  const links = document.querySelectorAll('nav.filetree a');
+  const sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  function onScroll(){
+    let idx = 0;
+    const y = window.scrollY + 120;
+    sections.forEach((sec, i) => { if(sec && sec.offsetTop <= y) idx = i; });
+    links.forEach((l,i) => l.classList.toggle('active', i===idx));
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // theme toggle
+  const btn = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  btn.addEventListener('click', () => {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    if(isDark){
+      root.setAttribute('data-theme','light');
+      btn.textContent = 'switch to dark';
+      btn.setAttribute('aria-pressed','false');
+    } else {
+      root.setAttribute('data-theme','dark');
+      btn.textContent = 'switch to light';
+      btn.setAttribute('aria-pressed','true');
+    }
+  });
+</script>
+</body>
+</html>
